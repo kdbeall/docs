@@ -86,6 +86,28 @@ creates the blob file in the containter with `key` as filename and `value` as th
 
 Azure Blob Storage state concurrency is achieved by using `ETag`s according to [the Azure Blob Storage documentation](https://docs.microsoft.com/en-us/azure/storage/common/storage-concurrency#managing-concurrency-in-blob-storage).
 
+## Metadata information
+
+By default the Azure Blob Storage output binding will auto generate a UUID as blob filename and not assign any system or custom metadata to it. It is configurable in the Metadata property of the message (all optional).
+
+Applications publishing to an Azure Blob Storage output binding should send a message with the following contract:
+```json
+{
+    "data": "file content",
+    "metadata": {
+        "blobName"           : "filename.txt",
+        "ContentType"        : "text/plain",
+        "ContentMD5"         : "vZGKbMRDAnMs4BIwlXaRvQ==",
+        "ContentEncoding"    : "UTF-8",
+        "ContentLanguage"    : "en-us",
+        "ContentDisposition" : "attachment",
+        "CacheControl"       : "no-cache",
+        "Custom"             : "hello-world",
+    },
+    "operation": "create"
+}
+```
+
 ## Related links
 - [Basic schema for a Dapr component]({{< ref component-schema >}})
 - Read [this guide]({{< ref "howto-get-save-state.md#step-2-save-and-retrieve-a-single-state" >}}) for instructions on configuring state store components
